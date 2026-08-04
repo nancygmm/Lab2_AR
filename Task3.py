@@ -1,6 +1,7 @@
 import time
 from dataclasses import dataclass, field
 from typing import Optional
+import matplotlib.pyplot as plt
 
 @dataclass(frozen=True)
 class Estado:
@@ -190,3 +191,39 @@ if __name__ == "__main__":
 
     resultado_pi.imprimir()
     resultado_vi.imprimir()
+
+
+    #---------
+    #Código para la pregu nta3 y task 3
+    #---------
+    gammas = [0.5, 0.75, 0.99]
+
+    valores_pi = []
+    valores_vi = []
+
+    for gamma in gammas:
+        mdp = MDP(gamma=gamma)
+
+        resultado_pi = iteracion_de_politica(mdp)
+        resultado_vi = iteracion_de_valor(mdp)
+
+        s0 = Estado(1, 1)
+
+        valores_pi.append(resultado_pi.V[s0])
+        valores_vi.append(resultado_vi.V[s0])
+
+        print("\nGamma = " + str(gamma))
+        print("V*(s0) PI = " + str(resultado_pi.V[s0]))
+        print("V*(s0) VI = " + str(resultado_vi.V[s0]))
+        print("Politica PI = " + str(resultado_pi.politica[s0]))
+        print("Politica VI = " + str(resultado_vi.politica[s0]))
+
+    plt.plot(gammas, valores_pi, marker="o", label="Policy Iteration")
+    plt.plot(gammas, valores_vi, marker="s", label="Value Iteration")
+
+    plt.xlabel("Gamma")
+    plt.ylabel("V*(s0)")
+    plt.title("Sensibilidad de V*(s0) respecto a gamma")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
